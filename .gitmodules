@@ -1,0 +1,3 @@
+[submodule "external/flight-computer-firmware"]
+	path = external/flight-computer-firmware
+	url = git@github.com:OpenFlightComputer/flight-computer-firmware.git
