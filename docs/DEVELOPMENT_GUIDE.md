@@ -2,8 +2,8 @@
 
 This guide explains how to build `flight-simulation`, a closed-loop software-in-the-loop (SIL) simulator for the OpenFlightComputer firmware. It covers the architecture, the conventions every file must follow, the build setup, reference code for the difficult parts, a milestone plan with definitions of done, and a roadmap for after the first version.
 
-- Firmware reference snapshot: `flight-computer-firmware` at commit `3174bbe` (2026-09-22). Every firmware interface quoted below was read from that commit. Re-check the quoted signatures when you bump the submodule.
-- Status: planning. Nothing described here exists yet.
+- Firmware reference snapshot: `flight-computer-firmware` at commit `521d62e` (2026-09-23). Re-check quoted signatures whenever the submodule is bumped.
+- Status: M0 in progress. Repository and host-build scaffolding exist; the two C/C++ interoperability tests remain hands-on tasks. Add simulator modules as their milestones begin rather than pre-creating the full roadmap in source files.
 
 ---
 
