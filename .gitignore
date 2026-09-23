@@ -1,0 +1,24 @@
+# CMake and compiled output
+/build/
+/out/
+/cmake-build-*/
+/compile_commands.json
+CMakeUserPresets.json
+
+# Python tooling
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Generated simulation output
+/artifacts/
+/results/
+
+# Editors and operating systems
+.DS_Store
+.idea/
+.vscode/
+*~
