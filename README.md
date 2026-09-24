@@ -38,7 +38,7 @@ UndefinedBehaviorSanitizer checks.
 - `external/flight-computer-firmware/`: firmware submodule pinned to a reviewed commit.
 - `vehicles/` and `scenarios/`: versioned JSON inputs.
 - `tools/`: Python analysis, plotting, rendering, and validation utilities.
-- `docs/decisions/` and `docs/validation/`: engineering decisions and physical comparisons.
+- `docs/validation/`: physical comparisons and validation reports.
 
 ## Development agreement
 

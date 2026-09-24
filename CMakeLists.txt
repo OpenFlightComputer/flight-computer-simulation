@@ -38,13 +38,32 @@ endif()
 
 include(FetchContent)
 
+find_package(Eigen3 3.4 QUIET NO_MODULE)
+if(NOT Eigen3_FOUND)
+    FetchContent_Declare(
+        eigen
+        GIT_REPOSITORY https://gitlab.com/libeigen/eigen.git
+        GIT_TAG 3.4.0
+        GIT_SHALLOW TRUE
+    )
+    set(EIGEN_BUILD_DOC OFF CACHE BOOL "" FORCE)
+    set(OFCSIM_BUILD_TESTING_SAVED ${BUILD_TESTING})
+    set(BUILD_TESTING OFF)
+    FetchContent_MakeAvailable(eigen)
+    set(BUILD_TESTING ${OFCSIM_BUILD_TESTING_SAVED})
+endif()
+
 include(cmake/FirmwareCore.cmake)
 
-add_library(ofcsim STATIC src/ofcsim.cpp)
+add_library(ofcsim STATIC
+    src/ofcsim.cpp
+    src/rigid_body.cpp
+)
 target_include_directories(ofcsim PUBLIC include)
 target_link_libraries(ofcsim
     PUBLIC
         ofc_firmware_core
+        Eigen3::Eigen
     PRIVATE
         ofcsim_warnings
         ofcsim_sanitizers

@@ -188,7 +188,6 @@ flight-simulation/
 ├── tools/                          # Python (uv): loader, plots, renderer, validation
 ├── docs/
 │   ├── DEVELOPMENT_GUIDE.md        # this file
-│   ├── decisions/                  # short decision records
 │   └── validation/                 # one report per validated flight log
 └── .github/workflows/ci.yml
 ```
@@ -1181,7 +1180,7 @@ Goal: a vehicle that falls and spins correctly.
 - [ ] `RigidBodyState`, `StateDerivative`, `derivative()`, `advance()`, `rk4_step()` (Sections 6.1 and 6.2).
 - [ ] `euler_zyx_deg()`, plus quaternion helpers with their own tests.
 - [ ] All the analytic tests in Section 7.1 except the motor and specific-force ones.
-- **DoD:** the analytic tests pass. `docs/decisions/0001-frames-and-units.md` records the frame and unit conventions.
+- **DoD:** the analytic tests pass. The frame and unit conventions are documented in the rigid-body header and README.
 - **C++ to learn here:** Eigen basics and the pitfalls noted in the code comments, templates with a callable parameter, `constexpr`, lambdas.
 
 ### M2 — Propulsion, geometry and vehicle files (10–15 h)

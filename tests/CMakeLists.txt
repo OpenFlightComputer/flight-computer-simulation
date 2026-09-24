@@ -9,3 +9,15 @@ target_link_libraries(firmware_interop_tests
 
 include(GoogleTest)
 gtest_discover_tests(firmware_interop_tests)
+
+add_executable(rigid_body_tests rigid_body_tests.cpp)
+target_link_libraries(rigid_body_tests
+    PRIVATE
+        ofcsim
+        GTest::gtest_main
+        ofcsim_warnings
+        ofcsim_sanitizers
+)
+
+include(GoogleTest)
+gtest_discover_tests(rigid_body_tests)
