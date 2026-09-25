@@ -53,6 +53,9 @@ struct RigidBodyParameters {
     const RigidBodyParameters& parameters,
     double dt_s);
 
+// Returns aerospace ZYX Euler angles as {roll, pitch, yaw} in degrees.
+[[nodiscard]] Vec3 euler_zyx_deg(const Quat& attitude);
+
 inline StateDerivative operator+(
       const StateDerivative& lhs,
       const StateDerivative& rhs)

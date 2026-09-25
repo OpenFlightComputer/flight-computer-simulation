@@ -1,5 +1,9 @@
 #include "ofcsim/rigid_body.hpp"
 
+#include <algorithm>
+#include <cmath>
+#include <numbers>
+
 namespace ofcsim {
 
 StateDerivative derivative(
@@ -98,6 +102,26 @@ RigidBodyState rk4_step(
         (k1 + 2.0 * k2 + 2.0 * k3 + k4) / 6.0;
 
     return advance(state, average, dt_s);
+}
+
+Vec3 euler_zyx_deg(const Quat& attitude)
+{
+    const double w = attitude.w();
+    const double x = attitude.x();
+    const double y = attitude.y();
+    const double z = attitude.z();
+
+    const double roll = std::atan2(
+        2.0 * (w * x + y * z),
+        1.0 - 2.0 * (x * x + y * y));
+    const double pitch = std::asin(std::clamp(
+        2.0 * (w * y - z * x), -1.0, 1.0));
+    const double yaw = std::atan2(
+        2.0 * (w * z + x * y),
+        1.0 - 2.0 * (y * y + z * z));
+
+    return Vec3(roll, pitch, yaw) *
+        (180.0 / std::numbers::pi);
 }
 
 }  // namespace ofcsim
