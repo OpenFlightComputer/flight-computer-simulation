@@ -124,4 +124,25 @@ Vec3 euler_zyx_deg(const Quat& attitude)
         (180.0 / std::numbers::pi);
 }
 
+Quat quat_from_euler_zyx_deg(const Vec3& angles_deg)
+{
+    const double radians_per_degree = std::numbers::pi / 180.0;
+    const double roll = angles_deg.x() * radians_per_degree;
+    const double pitch = angles_deg.y() * radians_per_degree;
+    const double yaw = angles_deg.z() * radians_per_degree;
+
+    const double cr = std::cos(roll / 2.0);
+    const double sr = std::sin(roll / 2.0);
+    const double cp = std::cos(pitch / 2.0);
+    const double sp = std::sin(pitch / 2.0);
+    const double cy = std::cos(yaw / 2.0);
+    const double sy = std::sin(yaw / 2.0);
+
+    return Quat(
+        cr * cp * cy + sr * sp * sy,
+        sr * cp * cy - cr * sp * sy,
+        cr * sp * cy + sr * cp * sy,
+        cr * cp * sy - sr * sp * cy);
+}
+
 }  // namespace ofcsim

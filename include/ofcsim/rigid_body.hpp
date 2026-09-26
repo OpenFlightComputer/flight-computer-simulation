@@ -56,6 +56,9 @@ struct RigidBodyParameters {
 // Returns aerospace ZYX Euler angles as {roll, pitch, yaw} in degrees.
 [[nodiscard]] Vec3 euler_zyx_deg(const Quat& attitude);
 
+// Constructs a body-to-world quaternion from aerospace ZYX angles in degrees.
+[[nodiscard]] Quat quat_from_euler_zyx_deg(const Vec3& angles_deg);
+
 inline StateDerivative operator+(
       const StateDerivative& lhs,
       const StateDerivative& rhs)

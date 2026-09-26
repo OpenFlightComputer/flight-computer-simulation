@@ -283,3 +283,50 @@ TEST(RigidBody, EulerZyxExtractsPureYaw)
 
     EXPECT_TRUE(result.isApprox(ofcsim::Vec3(0.0, 0.0, 45.0), 1.0e-9));
 }
+
+TEST(RigidBody, QuatFromEulerIdentityReturnsIdentity)
+{
+    const ofcsim::Quat result =
+        ofcsim::quat_from_euler_zyx_deg(ofcsim::Vec3::Zero());
+
+    EXPECT_TRUE(result.coeffs().isApprox(
+        ofcsim::Quat::Identity().coeffs(), 1.0e-12));
+}
+
+TEST(RigidBody, QuatFromEulerExtractsPureRotations)
+{
+    const ofcsim::Quat roll =
+        ofcsim::quat_from_euler_zyx_deg(ofcsim::Vec3(30.0, 0.0, 0.0));
+    const ofcsim::Quat pitch =
+        ofcsim::quat_from_euler_zyx_deg(ofcsim::Vec3(0.0, 20.0, 0.0));
+    const ofcsim::Quat yaw =
+        ofcsim::quat_from_euler_zyx_deg(ofcsim::Vec3(0.0, 0.0, 45.0));
+
+    EXPECT_TRUE(roll.coeffs().isApprox(
+        ofcsim::Quat(0.9659258263, 0.2588190451, 0.0, 0.0).coeffs(),
+        1.0e-9));
+    EXPECT_TRUE(pitch.coeffs().isApprox(
+        ofcsim::Quat(0.9848077530, 0.0, 0.1736481777, 0.0).coeffs(),
+        1.0e-9));
+    EXPECT_TRUE(yaw.coeffs().isApprox(
+        ofcsim::Quat(0.9238795325, 0.0, 0.0, 0.3826834324).coeffs(),
+        1.0e-9));
+}
+
+TEST(RigidBody, EulerQuaternionRoundTrip)
+{
+    const ofcsim::Vec3 expected_angles(30.0, 20.0, 45.0);
+    const ofcsim::Quat attitude =
+        ofcsim::quat_from_euler_zyx_deg(expected_angles);
+    const ofcsim::Vec3 result = ofcsim::euler_zyx_deg(attitude);
+
+    EXPECT_TRUE(result.isApprox(expected_angles, 1.0e-9));
+}
+
+TEST(RigidBody, QuatFromEulerReturnsUnitQuaternion)
+{
+    const ofcsim::Quat attitude =
+        ofcsim::quat_from_euler_zyx_deg(ofcsim::Vec3(30.0, 20.0, 45.0));
+
+    EXPECT_NEAR(attitude.norm(), 1.0, 1.0e-12);
+}
