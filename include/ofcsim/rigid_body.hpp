@@ -10,13 +10,15 @@ using Mat3 = Eigen::Matrix3d;
 using Quat = Eigen::Quaterniond;
 using Vec4 = Eigen::Vector4d;
 
+// World frame: NED coordinates (x north, y east, z down), metres and seconds.
+// Body frame: FRD coordinates (x front, y right, z down).
 inline const Vec3 kGravityNed{0.0, 0.0, 9.80665};
 
 struct RigidBodyState {
     Vec3 position_m = Vec3::Zero();
     Vec3 velocity_mps = Vec3::Zero();
-    Quat attitude = Quat::Identity();
-    Vec3 rate_rad_s = Vec3::Zero();
+    Quat attitude = Quat::Identity();  // body -> world rotation
+    Vec3 rate_rad_s = Vec3::Zero();    // body p, q, r in rad/s
 };
 
 struct StateDerivative {
@@ -27,8 +29,8 @@ struct StateDerivative {
 };
 
 struct BodyWrench {
-    Vec3 force_n = Vec3::Zero();
-    Vec3 torque_nm = Vec3::Zero();
+    Vec3 force_n = Vec3::Zero();   // total force in the body frame
+    Vec3 torque_nm = Vec3::Zero(); // total torque about the centre of mass
 };
 
 struct RigidBodyParameters {

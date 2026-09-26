@@ -5,8 +5,8 @@ for the OpenFlightComputer firmware. It links the real flight-control and IMU
 processing C modules to a C++20 vehicle model so controller behaviour can be
 characterized, regression-tested, and compared with physical flight logs.
 
-The project is at Milestone M0. The repository and host build are in place;
-the first C/C++ interoperability exercises are ready to implement. See
+Milestone M1 (rigid-body dynamics and RK4 integration) is complete. M2
+propulsion and vehicle geometry are next. See
 `docs/DEVELOPMENT_GUIDE.md` for the architecture, conventions, milestones,
 and validation plan.
 
@@ -39,6 +39,22 @@ UndefinedBehaviorSanitizer checks.
 - `vehicles/` and `scenarios/`: versioned JSON inputs.
 - `tools/`: Python analysis, plotting, rendering, and validation utilities.
 - `docs/validation/`: physical comparisons and validation reports.
+
+## Frames and units
+
+The simulator uses metres, seconds, kilograms, newtons, and radians internally.
+The world frame is NED: x points north, y east, and z down. The vehicle body
+frame is FRD: x points forward, y right, and z down. `RigidBodyState::attitude`
+is a unit quaternion that rotates body-frame vectors into the world frame:
+
+```cpp
+const Vec3 force_world = state.attitude * force_body;
+```
+
+Euler angles are only for logging and comparison. They use the aerospace ZYX
+sequence and are returned as `{roll, pitch, yaw}` in degrees. Forces and rates
+remain vectors in their documented frames; `BodyWrench` contains the total
+body-frame force and torque about the centre of mass.
 
 ## Development agreement
 

@@ -3,7 +3,7 @@
 This guide explains how to build `flight-simulation`, a closed-loop software-in-the-loop (SIL) simulator for the OpenFlightComputer firmware. It covers the architecture, the conventions every file must follow, the build setup, reference code for the difficult parts, a milestone plan with definitions of done, and a roadmap for after the first version.
 
 - Firmware reference snapshot: `flight-computer-firmware` at commit `521d62e` (2026-09-23). Re-check quoted signatures whenever the submodule is bumped.
-- Status: M0 in progress. Repository and host-build scaffolding exist; the two C/C++ interoperability tests remain hands-on tasks. Add simulator modules as their milestones begin rather than pre-creating the full roadmap in source files.
+- Status: M1 complete; M2 propulsion and vehicle geometry are next. Add simulator modules as their milestones begin rather than pre-creating the full roadmap in source files.
 
 ---
 
@@ -1177,9 +1177,9 @@ Goal: the real firmware code runs inside a C++ test.
 
 Goal: a vehicle that falls and spins correctly.
 
-- [ ] `RigidBodyState`, `StateDerivative`, `derivative()`, `advance()`, `rk4_step()` (Sections 6.1 and 6.2).
-- [ ] `euler_zyx_deg()`, plus quaternion helpers with their own tests.
-- [ ] All the analytic tests in Section 7.1 except the motor and specific-force ones.
+- [x] `RigidBodyState`, `StateDerivative`, `derivative()`, `advance()`, `rk4_step()` (Sections 6.1 and 6.2).
+- [x] `euler_zyx_deg()`, plus quaternion helpers with their own tests.
+- [x] All the analytic tests in Section 7.1 except the motor and specific-force ones.
 - **DoD:** the analytic tests pass. The frame and unit conventions are documented in the rigid-body header and README.
 - **C++ to learn here:** Eigen basics and the pitfalls noted in the code comments, templates with a callable parameter, `constexpr`, lambdas.
 

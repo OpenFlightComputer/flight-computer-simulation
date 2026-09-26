@@ -125,6 +125,29 @@ TEST(RigidBody, Rk4FreeFallMatchesAnalyticSolution)
         ofcsim::Vec3::Zero(), 1.0e-12));
 }
 
+TEST(RigidBody, Rk4ConstantThrustClimbMatchesAnalyticSolution)
+{
+    ofcsim::RigidBodyState state{};
+    ofcsim::BodyWrench wrench{};
+    ofcsim::RigidBodyParameters parameters{};
+    parameters.mass_kg = 2.0;
+    parameters.inertia_kgm2 = ofcsim::Mat3::Identity();
+    parameters.inertia_inv_kgm2 = ofcsim::Mat3::Identity();
+
+    // NED z is positive down. A level thrust force points upward in -z.
+    wrench.force_n.z() = -1.5 * parameters.mass_kg * ofcsim::kGravityNed.z();
+
+    const ofcsim::RigidBodyState result = ofcsim::rk4_step(state, wrench, parameters, 1.0);
+
+    // The net acceleration is -0.5 g, so z = -0.25 g t^2 and vz = -0.5 g t.
+    EXPECT_NEAR(result.position_m.z(), -0.25 * ofcsim::kGravityNed.z(), 1.0e-12);
+    EXPECT_NEAR(result.velocity_mps.z(), -0.5 * ofcsim::kGravityNed.z(), 1.0e-12);
+    EXPECT_NEAR(result.position_m.x(), 0.0, 1.0e-12);
+    EXPECT_NEAR(result.position_m.y(), 0.0, 1.0e-12);
+    EXPECT_TRUE(result.attitude.isApprox(ofcsim::Quat::Identity(), 1.0e-12));
+    EXPECT_TRUE(result.rate_rad_s.isApprox(ofcsim::Vec3::Zero(), 1.0e-12));
+}
+
 TEST(RigidBody, Rk4ConstantTorqueSpinUp)
 {
     ofcsim::RigidBodyState state{};
