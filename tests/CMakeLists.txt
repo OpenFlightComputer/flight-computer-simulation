@@ -46,3 +46,14 @@ configure_file(
 )
 
 gtest_discover_tests(vehicle_config_tests)
+
+add_executable(propulsion_tests propulsion_tests.cpp)
+target_link_libraries(propulsion_tests
+    PRIVATE
+        ofcsim
+        GTest::gtest_main
+        ofcsim_warnings
+        ofcsim_sanitizers
+)
+
+gtest_discover_tests(propulsion_tests)

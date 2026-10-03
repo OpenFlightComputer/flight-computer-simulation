@@ -1,0 +1,81 @@
+#include "ofcsim/propulsion.hpp"
+
+#include <gtest/gtest.h>
+
+namespace {
+
+ofcsim::VehicleConfig test_vehicle()
+{
+    ofcsim::VehicleConfig vehicle{};
+    vehicle.mass_kg = 2.0;
+    vehicle.inertia_kgm2 = ofcsim::Mat3::Identity();
+    vehicle.inertia_inv_kgm2 = ofcsim::Mat3::Identity();
+
+    vehicle.motors[0].position_m = ofcsim::Vec3(1.0, -1.0, 0.0);
+    vehicle.motors[1].position_m = ofcsim::Vec3(-1.0, -1.0, 0.0);
+    vehicle.motors[2].position_m = ofcsim::Vec3(1.0, 1.0, 0.0);
+    vehicle.motors[3].position_m = ofcsim::Vec3(-1.0, 1.0, 0.0);
+
+    vehicle.motors[0].spin_direction = 1;
+    vehicle.motors[1].spin_direction = -1;
+    vehicle.motors[2].spin_direction = -1;
+    vehicle.motors[3].spin_direction = 1;
+
+    for (ofcsim::MotorConfig& motor : vehicle.motors) {
+        motor.thrust_coeff = 2.0;
+        motor.torque_coeff = 0.5;
+        motor.max_speed_rad_s = 100.0;
+        motor.time_constant_s = 0.1;
+    }
+    return vehicle;
+}
+
+}  // namespace
+
+TEST(Propulsion, ConvertsCommandToRotorSpeed)
+{
+    const ofcsim::Propulsion propulsion(test_vehicle());
+
+    EXPECT_DOUBLE_EQ(propulsion.commanded_speed_rad_s(0, 0.5), 50.0);
+    EXPECT_DOUBLE_EQ(propulsion.commanded_speed_rad_s(0, -1.0), 0.0);
+    EXPECT_DOUBLE_EQ(propulsion.commanded_speed_rad_s(0, 2.0), 100.0);
+}
+
+TEST(Propulsion, ZeroRotorSpeedProducesZeroWrench)
+{
+    const ofcsim::Propulsion propulsion(test_vehicle());
+
+    const ofcsim::BodyWrench result = propulsion.wrench({0.0, 0.0, 0.0, 0.0});
+
+    EXPECT_TRUE(result.force_n.isApprox(ofcsim::Vec3::Zero()));
+    EXPECT_TRUE(result.torque_nm.isApprox(ofcsim::Vec3::Zero()));
+}
+
+TEST(Propulsion, EqualRotorSpeedsProduceVerticalThrustOnly)
+{
+    const ofcsim::Propulsion propulsion(test_vehicle());
+
+    const ofcsim::BodyWrench result = propulsion.wrench({1.0, 1.0, 1.0, 1.0});
+
+    EXPECT_TRUE(result.force_n.isApprox(ofcsim::Vec3(0.0, 0.0, -8.0)));
+    EXPECT_TRUE(result.torque_nm.isApprox(ofcsim::Vec3::Zero()));
+}
+
+TEST(Propulsion, SingleMotorProducesMomentFromOffsetThrust)
+{
+    const ofcsim::Propulsion propulsion(test_vehicle());
+
+    const ofcsim::BodyWrench result = propulsion.wrench({1.0, 0.0, 0.0, 0.0});
+
+    EXPECT_TRUE(result.force_n.isApprox(ofcsim::Vec3(0.0, 0.0, -2.0)));
+    EXPECT_TRUE(result.torque_nm.isApprox(ofcsim::Vec3(2.0, 2.0, -0.5)));
+}
+
+TEST(Propulsion, RotorSpinDirectionProducesYawTorque)
+{
+    const ofcsim::Propulsion propulsion(test_vehicle());
+
+    const ofcsim::BodyWrench result = propulsion.wrench({0.0, 1.0, 0.0, 0.0});
+
+    EXPECT_DOUBLE_EQ(result.torque_nm.z(), 0.5);
+}

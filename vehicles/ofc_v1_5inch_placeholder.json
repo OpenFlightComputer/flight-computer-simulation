@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "name": "ofc_v1_5inch_placeholder",
+  "mass_kg": 0.65,
+  "inertia_kgm2": [
+    [0.0030, 0.0, 0.0],
+    [0.0, 0.0035, 0.0],
+    [0.0, 0.0, 0.0060]
+  ],
+  "arm_radius_m": 0.1125,
+  "motors": [
+    {"corner": "front_left",  "spin_direction":  1},
+    {"corner": "rear_left",   "spin_direction": -1},
+    {"corner": "front_right", "spin_direction": -1},
+    {"corner": "rear_right",  "spin_direction":  1}
+  ],
+  "motor_defaults": {
+    "thrust_coeff": 1.6e-6,
+    "torque_coeff": 2.5e-8,
+    "max_speed_rad_s": 3140.0,
+    "time_constant_s": 0.03
+  },
+  "sources": {
+    "mass_kg": "placeholder estimate; replace with measured flying mass",
+    "inertia_kgm2": "placeholder estimate",
+    "arm_radius_m": "placeholder frame geometry",
+    "thrust_coeff": "placeholder motor/prop estimate",
+    "torque_coeff": "placeholder motor/prop estimate",
+    "max_speed_rad_s": "placeholder motor/prop estimate",
+    "time_constant_s": "placeholder motor response estimate"
+  }
+}
