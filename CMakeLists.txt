@@ -53,17 +53,25 @@ if(NOT Eigen3_FOUND)
     set(BUILD_TESTING ${OFCSIM_BUILD_TESTING_SAVED})
 endif()
 
+FetchContent_Declare(
+    nlohmann_json
+    URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz
+)
+FetchContent_MakeAvailable(nlohmann_json)
+
 include(cmake/FirmwareCore.cmake)
 
 add_library(ofcsim STATIC
     src/ofcsim.cpp
     src/rigid_body.cpp
+    src/vehicle_config.cpp
 )
 target_include_directories(ofcsim PUBLIC include)
 target_link_libraries(ofcsim
     PUBLIC
         ofc_firmware_core
         Eigen3::Eigen
+        nlohmann_json::nlohmann_json
     PRIVATE
         ofcsim_warnings
         ofcsim_sanitizers
