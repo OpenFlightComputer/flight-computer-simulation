@@ -26,25 +26,11 @@ void from_json(const Json& document, VehicleConfig& config)
                 inertia.at(row).at(column).get<double>();
         }
     }
-    const double arm_radius_m = document.at("arm_radius_m").get<double>();
-    if (!std::isfinite(arm_radius_m) || arm_radius_m <= 0.0) {
-        throw std::invalid_argument("arm_radius_m must be positive and finite");
-    }
     const Json& defaults = document.at("motor_defaults");
     const auto& motors = document.at("motors");
     if (motors.size() != config.motors.size()) {
         throw std::invalid_argument("vehicle configuration must define four motors");
     }
-
-    const double arm_coordinate = arm_radius_m / std::sqrt(2.0);
-    config.motors[0].position_m =
-        Vec3(arm_coordinate, -arm_coordinate, 0.0); // front-left
-    config.motors[1].position_m =
-        Vec3(-arm_coordinate, -arm_coordinate, 0.0); // rear-left
-    config.motors[2].position_m =
-        Vec3(arm_coordinate, arm_coordinate, 0.0); // front-right
-    config.motors[3].position_m =
-        Vec3(-arm_coordinate, arm_coordinate, 0.0); // rear-right
 
     constexpr const char* expected_corners[] = {
         "front_left", "rear_left", "front_right", "rear_right"};
@@ -57,6 +43,15 @@ void from_json(const Json& document, VehicleConfig& config)
             throw std::invalid_argument(
                 "motor corner does not match its logical index: " + corner);
         }
+        const Json& position = motors.at(index).at("position_m");
+        if (!position.is_array() || position.size() != 3) {
+            throw std::invalid_argument(
+                "motor position must contain exactly three values");
+        }
+        motor.position_m = Vec3(
+            position.at(0).get<double>(),
+            position.at(1).get<double>(),
+            position.at(2).get<double>());
         motor.spin_direction = motors.at(index).at("spin_direction").get<int>();
         motor.thrust_coeff = defaults.at("thrust_coeff").get<double>();
         motor.torque_coeff = defaults.at("torque_coeff").get<double>();

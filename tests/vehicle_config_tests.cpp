@@ -1,6 +1,5 @@
 #include "ofcsim/vehicle_config.hpp"
 
-#include <cmath>
 #include <filesystem>
 #include <fstream>
 
@@ -44,20 +43,19 @@ TEST(VehicleConfig, LoadsPhysicalParameters)
     EXPECT_TRUE(ofcsim::validate_vehicle_config(config));
 }
 
-TEST(VehicleConfig, MapsCornersToBodyFramePositions)
+TEST(VehicleConfig, LoadsMotorPositions)
 {
     const ofcsim::VehicleConfig config =
         ofcsim::load_vehicle_config(test_vehicle_path());
-    const double coordinate = 1.0 / std::sqrt(2.0);
 
     EXPECT_TRUE(config.motors[0].position_m.isApprox(
-        ofcsim::Vec3(coordinate, -coordinate, 0.0)));
+        ofcsim::Vec3(1.0, -1.0, 0.0)));
     EXPECT_TRUE(config.motors[1].position_m.isApprox(
-        ofcsim::Vec3(-coordinate, -coordinate, 0.0)));
+        ofcsim::Vec3(-1.0, -1.0, 0.0)));
     EXPECT_TRUE(config.motors[2].position_m.isApprox(
-        ofcsim::Vec3(coordinate, coordinate, 0.0)));
+        ofcsim::Vec3(1.0, 1.0, 0.0)));
     EXPECT_TRUE(config.motors[3].position_m.isApprox(
-        ofcsim::Vec3(-coordinate, coordinate, 0.0)));
+        ofcsim::Vec3(-1.0, 1.0, 0.0)));
 }
 
 TEST(VehicleConfig, LoadsMotorDefaultsAndSpinDirections)
@@ -95,6 +93,16 @@ TEST(VehicleConfig, RejectsMissingRequiredField)
 {
     nlohmann::json document = test_vehicle_json();
     document.erase("mass_kg");
+
+    EXPECT_THROW(
+        document.get<ofcsim::VehicleConfig>(),
+        nlohmann::json::out_of_range);
+}
+
+TEST(VehicleConfig, RejectsMissingMotorPosition)
+{
+    nlohmann::json document = test_vehicle_json();
+    document["motors"][0].erase("position_m");
 
     EXPECT_THROW(
         document.get<ofcsim::VehicleConfig>(),

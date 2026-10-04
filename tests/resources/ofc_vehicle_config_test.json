@@ -7,12 +7,11 @@
     [0.0, 3.0, 0.0],
     [0.0, 0.0, 4.0]
   ],
-  "arm_radius_m": 1.0,
   "motors": [
-    {"corner": "front_left",  "spin_direction":  1},
-    {"corner": "rear_left",   "spin_direction": -1},
-    {"corner": "front_right", "spin_direction": -1},
-    {"corner": "rear_right",  "spin_direction":  1}
+    {"corner": "front_left",  "position_m": [1.0, -1.0, 0.0], "spin_direction":  1},
+    {"corner": "rear_left",   "position_m": [-1.0, -1.0, 0.0], "spin_direction": -1},
+    {"corner": "front_right", "position_m": [1.0, 1.0, 0.0], "spin_direction": -1},
+    {"corner": "rear_right",  "position_m": [-1.0, 1.0, 0.0], "spin_direction":  1}
   ],
   "motor_defaults": {
     "thrust_coeff": 2.0,

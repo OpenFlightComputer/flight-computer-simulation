@@ -63,6 +63,7 @@ include(cmake/FirmwareCore.cmake)
 
 add_library(ofcsim STATIC
     src/ofcsim.cpp
+    src/plant.cpp
     src/rigid_body.cpp
     src/propulsion.cpp
     src/vehicle_config.cpp

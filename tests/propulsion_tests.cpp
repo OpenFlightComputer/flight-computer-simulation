@@ -1,5 +1,7 @@
 #include "ofcsim/propulsion.hpp"
 
+#include <cmath>
+
 #include <gtest/gtest.h>
 
 namespace {
@@ -78,4 +80,32 @@ TEST(Propulsion, RotorSpinDirectionProducesYawTorque)
     const ofcsim::BodyWrench result = propulsion.wrench({0.0, 1.0, 0.0, 0.0});
 
     EXPECT_DOUBLE_EQ(result.torque_nm.z(), 0.5);
+}
+
+TEST(Propulsion, HoverSpeedBalancesMeasuredVehicleMass)
+{
+    ofcsim::VehicleConfig vehicle = test_vehicle();
+    vehicle.mass_kg = 0.668;
+    vehicle.motors[0].position_m = ofcsim::Vec3(0.0725, -0.0975, 0.0);
+    vehicle.motors[1].position_m = ofcsim::Vec3(-0.0725, -0.0975, 0.0);
+    vehicle.motors[2].position_m = ofcsim::Vec3(0.0725, 0.0975, 0.0);
+    vehicle.motors[3].position_m = ofcsim::Vec3(-0.0725, 0.0975, 0.0);
+    for (ofcsim::MotorConfig& motor : vehicle.motors) {
+        motor.thrust_coeff = 1.6e-6; // initial estimate
+    }
+
+    const ofcsim::Propulsion propulsion(vehicle);
+    const double hover_speed = std::sqrt(
+        vehicle.mass_kg * ofcsim::kGravityNed.z() /
+        (4.0 * vehicle.motors[0].thrust_coeff));
+    const ofcsim::BodyWrench result = propulsion.wrench({
+        hover_speed, hover_speed, hover_speed, hover_speed});
+
+    EXPECT_NEAR(result.force_n.z(),
+                -vehicle.mass_kg * ofcsim::kGravityNed.z(),
+                1.0e-12);
+    EXPECT_TRUE(result.force_n.head<2>().isApprox(
+        ofcsim::Vec3::Zero().head<2>(), 1.0e-12));
+    EXPECT_TRUE(result.torque_nm.isApprox(
+        ofcsim::Vec3::Zero(), 1.0e-12));
 }
