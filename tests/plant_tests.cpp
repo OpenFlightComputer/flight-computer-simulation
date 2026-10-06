@@ -94,3 +94,59 @@ TEST(Plant, PropulsionUsesActualRotorSpeedDuringIntegration)
     EXPECT_DOUBLE_EQ(result.rigid_body.velocity_mps2.z(),
                      ofcsim::kGravityNed.z() - 4.0);
 }
+
+TEST(Plant, BelowHoverCommandRemainsOnGround)
+{
+    const ofcsim::VehicleConfig vehicle = test_vehicle();
+    const ofcsim::Propulsion propulsion(vehicle);
+    const ofcsim::RigidBodyParameters parameters = test_parameters();
+    const ofcsim::GroundContact contact;
+    ofcsim::PlantState state{};
+
+    const double hover_speed = std::sqrt(
+        vehicle.mass_kg * ofcsim::kGravityNed.z() /
+        (4.0 * vehicle.motors[0].thrust_coeff));
+    const double rotor_speed = 0.9 * hover_speed;
+    state.rotor_speed_rad_s.fill(rotor_speed);
+    const ofcsim::MotorArray command{
+        rotor_speed / vehicle.motors[0].max_speed_rad_s,
+        rotor_speed / vehicle.motors[1].max_speed_rad_s,
+        rotor_speed / vehicle.motors[2].max_speed_rad_s,
+        rotor_speed / vehicle.motors[3].max_speed_rad_s};
+
+    for (int step = 0; step < 1000; ++step) {
+        state = ofcsim::step(
+            state, command, propulsion, vehicle, parameters, contact, 0.001);
+    }
+
+    EXPECT_DOUBLE_EQ(state.rigid_body.position_m.z(), 0.0);
+    EXPECT_DOUBLE_EQ(state.rigid_body.velocity_mps.z(), 0.0);
+}
+
+TEST(Plant, AboveHoverCommandProducesLiftoff)
+{
+    const ofcsim::VehicleConfig vehicle = test_vehicle();
+    const ofcsim::Propulsion propulsion(vehicle);
+    const ofcsim::RigidBodyParameters parameters = test_parameters();
+    const ofcsim::GroundContact contact;
+    ofcsim::PlantState state{};
+
+    const double hover_speed = std::sqrt(
+        vehicle.mass_kg * ofcsim::kGravityNed.z() /
+        (4.0 * vehicle.motors[0].thrust_coeff));
+    const double rotor_speed = 1.1 * hover_speed;
+    state.rotor_speed_rad_s.fill(rotor_speed);
+    const ofcsim::MotorArray command{
+        rotor_speed / vehicle.motors[0].max_speed_rad_s,
+        rotor_speed / vehicle.motors[1].max_speed_rad_s,
+        rotor_speed / vehicle.motors[2].max_speed_rad_s,
+        rotor_speed / vehicle.motors[3].max_speed_rad_s};
+
+    for (int step = 0; step < 1000; ++step) {
+        state = ofcsim::step(
+            state, command, propulsion, vehicle, parameters, contact, 0.001);
+    }
+
+    EXPECT_LT(state.rigid_body.position_m.z(), 0.0);
+    EXPECT_LT(state.rigid_body.velocity_mps.z(), 0.0);
+}

@@ -1,6 +1,10 @@
 {
   "schema_version": 1,
   "name": "test_vehicle",
+  "firmware": {
+    "repository": "test/flight-computer-firmware",
+    "commit": "test-commit"
+  },
   "mass_kg": 2.0,
   "inertia_kgm2": [
     [2.0, 0.0, 0.0],

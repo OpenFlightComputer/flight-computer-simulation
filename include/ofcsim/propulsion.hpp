@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ofcsim/vehicle_config.hpp"
+#include "ofcsim/config/vehicle_config.hpp"
 
 #include <cstddef>
 

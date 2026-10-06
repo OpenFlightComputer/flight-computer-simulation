@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "name": "open_loop_hop",
+  "vehicle": "../vehicles/ofc_v1_5inch_placeholder.json",
+  "flight_profile": "../flight_profiles/open_loop_hop.json",
+  "duration_s": 2.0,
+  "physics_step_s": 0.001,
+  "ground": {
+    "ground_z_m": 0.0
+  },
+  "initial_state": {
+    "position_m": [0.0, 0.0, 0.0],
+    "velocity_mps": [0.0, 0.0, 0.0],
+    "euler_deg": [0.0, 0.0, 0.0],
+    "rate_rad_s": [0.0, 0.0, 0.0]
+  }
+}

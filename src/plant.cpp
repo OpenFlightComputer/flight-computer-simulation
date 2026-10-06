@@ -72,4 +72,24 @@ PlantState rk4_step(
     return advance(state, average, dt_s);
 }
 
+PlantState step(
+    const PlantState& state,
+    const MotorArray& motor_commands,
+    const Propulsion& propulsion,
+    const VehicleConfig& vehicle,
+    const RigidBodyParameters& rigid_body_parameters,
+    const GroundContact& contact,
+    double dt_s)
+{
+    PlantState result = rk4_step(
+        state,
+        motor_commands,
+        propulsion,
+        vehicle,
+        rigid_body_parameters,
+        dt_s);
+    contact.enforce(result.rigid_body);
+    return result;
+}
+
 }  // namespace ofcsim

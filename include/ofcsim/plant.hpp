@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ofcsim/contact.hpp"
 #include "ofcsim/propulsion.hpp"
 
 #include <cstddef>
@@ -75,6 +76,16 @@ inline PlantDerivative operator/(
     const Propulsion& propulsion,
     const VehicleConfig& vehicle,
     const RigidBodyParameters& rigid_body_parameters,
+    double dt_s);
+
+// Advance the unconstrained plant one step, then apply ground contact.
+[[nodiscard]] PlantState step(
+    const PlantState& state,
+    const MotorArray& motor_commands,
+    const Propulsion& propulsion,
+    const VehicleConfig& vehicle,
+    const RigidBodyParameters& rigid_body_parameters,
+    const GroundContact& contact,
     double dt_s);
 
 }  // namespace ofcsim

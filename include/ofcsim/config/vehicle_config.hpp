@@ -4,6 +4,7 @@
 
 #include <array>
 #include <filesystem>
+#include <string>
 
 #include <nlohmann/json_fwd.hpp>
 
@@ -20,7 +21,13 @@ struct MotorConfig {
 
 using MotorArray = std::array<double, 4>;
 
+struct FirmwareReference {
+    std::string repository;
+    std::string commit;
+};
+
 struct VehicleConfig {
+    FirmwareReference firmware;
     double mass_kg = 0.0;
     Mat3 inertia_kgm2 = Mat3::Zero();
     Mat3 inertia_inv_kgm2 = Mat3::Zero();

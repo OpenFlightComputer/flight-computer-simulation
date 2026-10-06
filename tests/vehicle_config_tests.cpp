@@ -1,4 +1,4 @@
-#include "ofcsim/vehicle_config.hpp"
+#include "ofcsim/config/vehicle_config.hpp"
 
 #include <filesystem>
 #include <fstream>
@@ -41,6 +41,15 @@ TEST(VehicleConfig, LoadsPhysicalParameters)
     EXPECT_TRUE(config.inertia_kgm2.isApprox(expected_inertia));
     EXPECT_TRUE(config.inertia_inv_kgm2.isApprox(expected_inverse));
     EXPECT_TRUE(ofcsim::validate_vehicle_config(config));
+}
+
+TEST(VehicleConfig, LoadsFirmwareReference)
+{
+    const ofcsim::VehicleConfig config =
+        ofcsim::load_vehicle_config(test_vehicle_path());
+
+    EXPECT_EQ(config.firmware.repository, "test/flight-computer-firmware");
+    EXPECT_EQ(config.firmware.commit, "test-commit");
 }
 
 TEST(VehicleConfig, LoadsMotorPositions)

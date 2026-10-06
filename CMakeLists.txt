@@ -62,11 +62,17 @@ FetchContent_MakeAvailable(nlohmann_json)
 include(cmake/FirmwareCore.cmake)
 
 add_library(ofcsim STATIC
+    src/contact.cpp
+    src/config/flight_profile_config.cpp
+    src/config/scenario_config.cpp
+    src/config/vehicle_config.cpp
     src/ofcsim.cpp
     src/plant.cpp
     src/rigid_body.cpp
+    src/profiles/flight_profile.cpp
+    src/profiles/keyframe_flight_profile.cpp
     src/propulsion.cpp
-    src/vehicle_config.cpp
+    src/trajectory_csv_writer.cpp
 )
 target_include_directories(ofcsim PUBLIC include)
 target_link_libraries(ofcsim

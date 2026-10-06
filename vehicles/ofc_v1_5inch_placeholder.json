@@ -1,6 +1,10 @@
 {
   "schema_version": 1,
   "name": "ofc_v1_5inch_placeholder",
+  "firmware": {
+    "repository": "OpenFlightComputer/flight-computer-firmware",
+    "commit": "3174bbe"
+  },
   "mass_kg": 0.668,
   "inertia_kgm2": [
     [0.0030, 0.0, 0.0],
