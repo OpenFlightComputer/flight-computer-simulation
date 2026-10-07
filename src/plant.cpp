@@ -25,6 +25,27 @@ PlantDerivative derivative(
     return result;
 }
 
+Vec3 specific_force_body_mps2(
+    const PlantState& state,
+    const Propulsion& propulsion,
+    const RigidBodyParameters& rigid_body_parameters,
+    const GroundContact& contact)
+{
+    const BodyWrench wrench = propulsion.wrench(state.rotor_speed_rad_s);
+    const Vec3 force_body = wrench.force_n;
+    const Vec3 force_world = state.rigid_body.attitude * force_body;
+    const Vec3 acceleration_world =
+        force_world / rigid_body_parameters.mass_kg + kGravityNed;
+    const Vec3 acceleration_world_constrained =
+        contact.constrain_acceleration(state.rigid_body, acceleration_world);
+    const Vec3 specific_force_world =
+        acceleration_world_constrained - kGravityNed;
+    const Vec3 specific_force_body =
+        state.rigid_body.attitude.conjugate() * specific_force_world;
+
+    return specific_force_body;
+}
+
 PlantState advance(
     const PlantState& state,
     const PlantDerivative& derivative,

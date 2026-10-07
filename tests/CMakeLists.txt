@@ -91,6 +91,17 @@ target_link_libraries(trajectory_csv_writer_tests
 
 gtest_discover_tests(trajectory_csv_writer_tests)
 
+add_executable(imu_model_tests imu_model_tests.cpp)
+target_link_libraries(imu_model_tests
+    PRIVATE
+        ofcsim
+        GTest::gtest_main
+        ofcsim_warnings
+        ofcsim_sanitizers
+)
+
+gtest_discover_tests(imu_model_tests)
+
 add_executable(configuration_tests configuration_tests.cpp)
 target_link_libraries(configuration_tests
     PRIVATE

@@ -18,6 +18,12 @@ struct PlantDerivative {
     MotorArray rotor_speed_rad_s2{};
 };
 
+[[nodiscard]] Vec3 specific_force_body_mps2(
+    const PlantState& state,
+    const Propulsion& propulsion,
+    const RigidBodyParameters& rigid_body_parameters,
+    const GroundContact& contact);
+
 inline PlantDerivative operator+(
     const PlantDerivative& lhs,
     const PlantDerivative& rhs)

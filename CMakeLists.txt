@@ -66,6 +66,8 @@ add_library(ofcsim STATIC
     src/config/flight_profile_config.cpp
     src/config/scenario_config.cpp
     src/config/vehicle_config.cpp
+    src/firmware_stack.cpp
+    src/imu_model.cpp
     src/ofcsim.cpp
     src/plant.cpp
     src/rigid_body.cpp

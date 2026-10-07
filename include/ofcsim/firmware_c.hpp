@@ -8,6 +8,7 @@ extern "C" {
 #include "flight_configuration_snapshot.h"
 #include "flight_control_core.h"
 #include "flight_runtime_configuration.h"
+#include "accelerometer_attitude.h"
 #include "imu_processing_pipeline.h"
 #include "imu_sample.h"
 #include "manual_easy_behavior.h"
